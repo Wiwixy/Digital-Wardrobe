@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Wardrobe - Interactive Closet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .closet-area {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .closet-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        .clothes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .clothing-item {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .clothing-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+
+        .clothing-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .clothing-emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .clothing-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .info-card {
+            position: absolute;
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            max-width: 200px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .info-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #ff6b6b;
+        }
+
+        .donation-area {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .donation-box {
+            border: 3px dashed #4ecdc4;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            min-height: 200px;
+            background: linear-gradient(145deg, #f0fffe, #e6fdfc);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .donation-box.drag-over {
+            background: linear-gradient(145deg, #4ecdc4, #44b3aa);
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .donation-box h3 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .donated-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .donated-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #4ecdc4;
+            border: 1px solid #4ecdc4;
+        }
+
+        .stats-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .points {
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+
+        .ai-tips {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .ai-tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            background: #f8f9ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .pollution-facts {
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .pollution-facts h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fact-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .celebration.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            80% { transform: translateY(-10px); }
+        }
+
+        .bounce {
+            animation: bounce 1s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .clothes-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 Digital Wardrobe</h1>
+            <p>Transform your closet, transform the planet</p>
+        </div>
+
+        <div class="main-content">
+            <div class="closet-area">
+                <h2 class="closet-title">Your Virtual Closet</h2>
+                <div class="clothes-grid" id="clothesGrid">
+                    <!-- Clothing items will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="donation-area">
+                <div class="donation-box" id="donationBox">
+                    <h3>🎁 Donation Box</h3>
+                    <p>Drag unworn items here to give them a second life!</p>
+                    <div class="donated-items" id="donatedItems"></div>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stat-item">
+                        <span>Items Donated:</span>
+                        <span class="points" id="donatedCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Water Saved:</span>
+                        <span class="points" id="waterSaved">0L</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>CO2 Reduced:</span>
+                        <span class="points" id="co2Saved">0kg</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Impact Score:</span>
+                        <span class="points" id="impactScore">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-tips">
+            <h3>🤖 AI Sustainability Tips</h3>
+            <div id="aiTipsList"></div>
+        </div>
+
+        <div class="pollution-facts">
+            <h3>🌍 Textile Pollution Facts</h3>
+            <div id="pollutionFactsList"></div>
+        </div>
+
+        <div class="info-card" id="infoCard"></div>
+        <div class="celebration" id="celebration">
+            <h2>🎉 Amazing!</h2>
+            <p id="celebrationMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        // Clothing items data with environmental impact
+        const clothingItems = [
+            { name: "Jeans", emoji: "👖", info: "I was produced with 7,500 liters of water - enough for one person to drink for 7 years!", water: 7500, co2: 33 },
+            { name: "Cotton Dress", emoji: "👗", info: "My wear rate is only 40% - I'm barely used but taking up space!", water: 2700, co2: 15 },
+            { name: "Wool Sweater", emoji: "🧥", info: "I generate 27kg of CO2 - equivalent to driving 145km in a car!", water: 6000, co2: 27 },
+            { name: "T-Shirt", emoji: "👕", info: "I used 2,700 liters of water - equivalent to what you drink in 3 years!", water: 2700, co2: 8 },
+            { name: "Sneakers", emoji: "👟", info: "My production created 14kg of CO2 and I'm worn only twice a month!", water: 8000, co2: 14 },
+            { name: "Leather Jacket", emoji: "🧥", info: "I used 17,000 liters of water and generated 110kg of CO2!", water: 17000, co2: 110 },
+            { name: "Blazer", emoji: "👔", info: "I hang unworn 80% of the time but required massive resources to make!", water: 3000, co2: 20 },
+            { name: "Skirt", emoji: "👗", info: "I'm made from polyester and will take 200+ years to decompose!", water: 1500, co2: 9 },
+            { name: "Scarf", emoji: "🧣", info: "I'm a fast fashion item worn 3 times on average before disposal!", water: 1200, co2: 5 },
+            { name: "Hat", emoji: "🎩", info: "I represent impulse buying - purchased but rarely worn!", water: 800, co2: 3 }
+        ];
+
+        // AI tips for sustainable fashion
+        const aiTips = [
+            "Consider the 30-wear rule: Will you wear this item at least 30 times?",
+            "Quality over quantity: One well-made item beats 5 cheap ones.",
+            "Check your closet utilization: Most people wear only 20% of their clothes regularly.",
+            "Seasonal rotation: Store off-season items to see what you actually miss.",
+            "The one-in-one-out rule: For every new item, donate one existing piece.",
+            "Mix and match: Choose items that work with multiple outfits.",
+            "Repair and upcycle: Small fixes can extend clothing life significantly."
+        ];
+
+        // Textile pollution facts
+        const pollutionFacts = [
+            "The fashion industry produces 92 million tons of textile waste annually - equivalent to a garbage truck of clothes every second.",
+            "Polyester clothing sheds 700,000 microplastic fibers per wash, polluting our oceans and food chain.",
+            "It takes 2,000 gallons of water to make ONE pair of jeans - the same amount a person drinks in 5-6 years.",
+            "The fashion industry accounts for 8-10% of global carbon emissions - more than aviation and shipping combined.",
+            "Less than 1% of used clothing is recycled into new garments due to technological limitations.",
+            "Textile dyeing is the second-largest polluter of water globally, contaminating rivers in production countries.",
+            "The average person buys 60% more clothing than 15 years ago but keeps items for half as long."
+        ];
+
+        let stats = {
+            donated: 0,
+            waterSaved: 0,
+            co2Saved: 0,
+            impactScore: 0
+        };
+
+        let draggedItem = null;
+        let infoCard = document.getElementById('infoCard');
+        let donatedItems = [];
+
+        // Initialize the app
+        function init() {
+            populateCloset();
+            populateAITips();
+            populatePollutionFacts();
+            setupEventListeners();
+        }
+
+        function populateCloset() {
+            const grid = document.getElementById('clothesGrid');
+            clothingItems.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'clothing-item';
+                itemElement.draggable = true;
+                itemElement.dataset.index = index;
+                itemElement.innerHTML = `
+                    <span class="clothing-emoji">${item.emoji}</span>
+                    <div class="clothing-name">${item.name}</div>
+                `;
+                grid.appendChild(itemElement);
+            });
+        }
+
+        function populateAITips() {
+            const tipsList = document.getElementById('aiTipsList');
+            const shuffledTips = aiTips.sort(() => Math.random() - 0.5).slice(0, 3);
+            shuffledTips.forEach(tip => {
+                const tipElement = document.createElement('div');
+                tipElement.className = 'tip-item';
+                tipElement.textContent = tip;
+                tipsList.appendChild(tipElement);
+            });
+        }
+
+        function populatePollutionFacts() {
+            const factsList = document.getElementById('pollutionFactsList');
+            const shuffledFacts = pollutionFacts.sort(() => Math.random() - 0.5).slice(0, 3);
+            shuffledFacts.forEach(fact => {
+                const factElement = document.createElement('div');
+                factElement.className = 'fact-item';
+                factElement.textContent = fact;
+                factsList.appendChild(factElement);
+            });
+        }
+
+        function setupEventListeners() {
+            const clothingItems = document.querySelectorAll('.clothing-item');
+            const donationBox = document.getElementById('donationBox');
+
+            clothingItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('mouseenter', showInfo);
+                item.addEventListener('mouseleave', hideInfo);
+            });
+
+            donationBox.addEventListener('dragover', handleDragOver);
+            donationBox.addEventListener('drop', handleDrop);
+            donationBox.addEventListener('dragleave', handleDragLeave);
+        }
+
+        function handleDragStart(e) {
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            document.getElementById('donationBox').classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            document.getElementById('donationBox').classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('donationBox').classList.remove('drag-over');
+            
+            if (draggedItem) {
+                const itemIndex = parseInt(draggedItem.dataset.index);
+                const item = clothingItems[itemIndex];
+                
+                // Add to donated items
+                donatedItems.push(item);
+                
+                // Update stats
+                stats.donated++;
+                stats.waterSaved += item.water;
+                stats.co2Saved += item.co2;
+                stats.impactScore += Math.floor((item.water / 100) + (item.co2 * 2));
+                
+                // Remove from closet
+                draggedItem.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    draggedItem.remove();
+                    updateDisplay();
+                    showCelebration(item);
+                }, 300);
+                
+                // Add to donation box display
+                addDonatedItemDisplay(item);
+            }
+        }
+
+        function showInfo(e) {
+            const itemIndex = parseInt(e.target.dataset.index);
+            const item = clothingItems[itemIndex];
+            const rect = e.target.getBoundingClientRect();
+            
+            infoCard.textContent = item.info;
+            infoCard.style.left = rect.left + 'px';
+            infoCard.style.top = (rect.top - 60) + 'px';
+            infoCard.classList.add('show');
+        }
+
+        function hideInfo() {
+            infoCard.classList.remove('show');
+        }
+
+        function addDonatedItemDisplay(item) {
+            const donatedItemsContainer = document.getElementById('donatedItems');
+            const itemElement = document.createElement('div');
+            itemElement.className = 'donated-item bounce';
+            itemElement.textContent = `${item.emoji} ${item.name}`;
+            donatedItemsContainer.appendChild(itemElement);
+        }
+
+        function updateDisplay() {
+            document.getElementById('donatedCount').textContent = stats.donated;
+            document.getElementById('waterSaved').textContent = stats.waterSaved.toLocaleString() + 'L';
+            document.getElementById('co2Saved').textContent = stats.co2Saved + 'kg';
+            document.getElementById('impactScore').textContent = stats.impactScore;
+        }
+
+        function showCelebration(item) {
+            const celebration = document.getElementById('celebration');
+            const message = document.getElementById('celebrationMessage');
+            
+            const messages = [
+                `Great choice! You've saved ${item.water.toLocaleString()}L of water!`,
+                `Amazing! That's ${item.co2}kg less CO2 in the atmosphere!`,
+                `Fantastic! Someone will love wearing this ${item.name}!`,
+                `Keep going! You're making a real difference!`
+            ];
+            
+            message.textContent = messages[Math.floor(Math.random() * messages.length)];
+            celebration.classList.add('show');
+            
+            setTimeout(() => {
+                celebration.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the app when the page loads
+        init();
+    </script>
+</body>
+</html>
+<!-- About Us Section -->
+<section class="about-us">
+  <div class="about-container">
+    <!-- Circular Image -->
+    <div class="circular-image">
+      <img src="https://via.placeholder.com/250" alt="About Us">
+    </div>
+
+    <!-- Text Content -->
+    <div class="about-text">
+      <h2>About Us</h2>
+      <p>
+        We are a passionate team committed to building sustainable solutions.  
+        Our mission is to innovate, inspire, and protect our planet for future generations.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <h2>Our Key Features</h2>
+  <p>Discover the main pillars that make our project unique and impactful.</p>
+
+  <div class="grid-container">
+    <div class="feature-item">
+      <img src="https://via.placeholder.com/300" alt="Feature 1">
+      <h3>Innovation</h3>
+    </div>
+    <div class="feature-item">
+      <img src="https://via.placeholder.com/300" alt="Feature 2">
+      <h3>Sustainability</h3>
+    </div>
+    <div class="feature-item">
+      <img src="https://via.placeholder.com/300" alt="Feature 3">
+      <h3>Community</h3>
+    </div>
+  </div>
+</section>
+<!-- Content Block 1 -->
+<section class="content-block block-1">
+  <div class="content-image">
+    <img src="https://via.placeholder.com/400" alt="Sustainable Tech">
+  </div>
+  <div class="content-text">
+    <h2>Innovative Technology</h2>
+    <p>
+      We leverage cutting-edge sustainable technology to reduce environmental impact 
+      while enhancing efficiency and creativity in every project.
+    </p>
+  </div>
+</section>
+
+<!-- Content Block 2 -->
+<section class="content-block block-2">
+  <div class="content-image">
+    <img src="https://via.placeholder.com/400" alt="Community Projects">
+  </div>
+  <div class="content-text">
+    <h2>Community Engagement</h2>
+    <p>
+      Our initiatives actively involve the local community, empowering citizens and 
+      fostering collaboration to achieve a greener future.
+    </p>
+  </div>
+</section>
+<!-- Team Section -->
+<section class="team-section">
+  <h2>Meet Our Team</h2>
+  <h3>Dedicated professionals driving sustainability forward</h3>
+
+  <div class="profile-grid">
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 1">
+    </div>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 2">
+    </div>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 3">
+    </div>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 4">
+    </div>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 5">
+    </div>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Team Member 6">
+    </div>
+  </div>
+</section>
+<!-- Pricing / Info Cards Section -->
+<section class="pricing-section">
+  <h2>Our Plans & Benefits</h2>
+  <h3>Choose the package that fits your sustainable journey</h3>
+
+  <div class="card-container">
+    <!-- Card 1 -->
+    <div class="info-card">
+      <h2>Starter</h2>
+      <ul>
+        <li>Access to basic resources</li>
+        <li>Community support</li>
+        <li>Monthly newsletter</li>
+      </ul>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="info-card">
+      <h2>Professional</h2>
+      <ul>
+        <li>All Starter features</li>
+        <li>Exclusive webinars</li>
+        <li>Project toolkit access</li>
+      </ul>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="info-card">
+      <h2>Enterprise</h2>
+      <ul>
+        <li>All Professional features</li>
+        <li>One-on-one consulting</li>
+        <li>Advanced analytics & reports</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- FAQ Section -->
+<section class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <h3>Everything you need to know about our project</h3>
+
+  <div class="faq-container">
+    <!-- FAQ Item 1 -->
+    <div class="faq-item">
+      <h3>What is Kayseri 2050 project?</h3>
+      <p>The Kayseri 2050 project aims to develop sustainable solutions for urban development, community engagement, and environmental protection in the city of Kayseri.</p>
+    </div>
+
+    <!-- FAQ Item 2 -->
+    <div class="faq-item">
+      <h3>How can I participate?</h3>
+      <p>You can join our initiatives by signing up on our website, attending workshops, and contributing to community projects.</p>
+    </div>
+
+    <!-- FAQ Item 3 -->
+    <div class="faq-item">
+      <h3>Are the events free?</h3>
+      <p>Most of our community events and online webinars are free of charge, ensuring everyone has access to participate.</p>
+    </div>
+
+    <!-- FAQ Item 4 -->
+    <div class="faq-item">
+      <h3>How do you ensure sustainability?</h3>
+      <p>We follow environmentally responsible practices, measure our carbon footprint, and engage with local partners to implement eco-friendly solutions.</p>
+    </div>
+  </div>
+</section>
+<!-- Contact Us Section -->
+<section class="contact-section">
+  <div class="contact-container">
+    <!-- Left Text -->
+    <div class="contact-text">
+      <h2>Contact Us</h2>
+      <p>
+        Have questions or want to join our initiatives? Reach out to us!  
+        We’re here to help and provide guidance on sustainable projects in Kayseri.
+      </p>
+      <p>
+        Email: info@kayseri2050.com<br>
+        Phone: +90 123 456 7890
+      </p>
+    </div>
+
+    <!-- Right Map Placeholder -->
+    <div class="contact-map">
+      <img src="https://via.placeholder.com/500x300" alt="Map Placeholder">
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Team</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <p>Follow us on social media:</p>
+    <ul class="social-links">
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Instagram</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Kayseri 2050 Project. All rights reserved.</p>
+  </div>
+</footer>

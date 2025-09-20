@@ -1,0 +1,1034 @@
+/* Digital Wardrobe - Complete CSS Styling */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Container and Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header p {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Main Content Grid */
+.main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+/* Closet Area Styles */
+.closet-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.closet-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+}
+
+/* Clothes Grid */
+.clothes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Clothing Item Styles */
+.clothing-item {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: grab;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.clothing-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    border-color: #667eea;
+}
+
+.clothing-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.clothing-emoji {
+    font-size: 3em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.clothing-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9em;
+}
+
+/* Info Card Styles */
+.info-card {
+    position: absolute;
+    background: #ff6b6b;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    max-width: 200px;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.info-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.info-card::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #ff6b6b;
+}
+
+/* Donation Area Styles */
+.donation-area {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Donation Box */
+.donation-box {
+    border: 3px dashed #4ecdc4;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    min-height: 200px;
+    background: linear-gradient(145deg, #f0fffe, #e6fdfc);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.donation-box.drag-over {
+    background: linear-gradient(145deg, #4ecdc4, #44b3aa);
+    border-color: #fff;
+    transform: scale(1.05);
+}
+
+.donation-box h3 {
+    color: #4ecdc4;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.donation-box p {
+    color: #4ecdc4;
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+/* Donated Items Display */
+.donated-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.donated-item {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    color: #4ecdc4;
+    border: 1px solid #4ecdc4;
+}
+
+/* Statistics Panel */
+.stats-panel {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    margin-top: 20px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.points {
+    color: #4ecdc4;
+    font-weight: bold;
+}
+
+/* AI Tips Section */
+.ai-tips {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ai-tips h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}
+
+.tip-item {
+    background: #f8f9ff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 4px solid #667eea;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* Pollution Facts Section */
+.pollution-facts {
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.pollution-facts h3 {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}
+
+.fact-item {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* Celebration Modal */
+.celebration {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 2000;
+    min-width: 300px;
+}
+
+.celebration.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.celebration h2 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.celebration p {
+    color: #333;
+    font-size: 1.1em;
+    line-height: 1.4;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 20%, 60%, 100% { 
+        transform: translateY(0); 
+    }
+    40% { 
+        transform: translateY(-20px); 
+    }
+    80% { 
+        transform: translateY(-10px); 
+    }
+}
+
+.bounce {
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+/* Hover Effects */
+.clothing-item:active {
+    cursor: grabbing;
+    transform: scale(0.95) rotate(5deg);
+}
+
+.donation-box:hover {
+    border-color: #44b3aa;
+    background: linear-gradient(145deg, #e6fdfc, #d9faf9);
+}
+
+.tip-item:hover {
+    background: #f0f2ff;
+    transform: translateX(5px);
+    transition: all 0.3s ease;
+}
+
+.fact-item:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #667eea;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .main-content {
+        gap: 20px;
+    }
+    
+    .closet-area, .donation-area {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .header p {
+        font-size: 1em;
+    }
+    
+    .clothes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    .clothing-item {
+        padding: 10px;
+    }
+    
+    .clothing-emoji {
+        font-size: 2.5em;
+    }
+    
+    .clothing-name {
+        font-size: 0.8em;
+    }
+    
+    .donation-box {
+        padding: 20px;
+        min-height: 150px;
+    }
+    
+    .ai-tips, .pollution-facts {
+        margin-top: 15px;
+        padding: 15px;
+    }
+    
+    .celebration {
+        padding: 20px;
+        margin: 20px;
+        min-width: auto;
+        max-width: 90vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .clothes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+    
+    .clothing-emoji {
+        font-size: 2em;
+    }
+    
+    .clothing-item {
+        padding: 8px;
+    }
+    
+    .tip-item, .fact-item {
+        font-size: 0.8em;
+        padding: 8px 10px;
+    }
+    
+    .stat-item {
+        font-size: 1em;
+    }
+    
+    .donation-box h3 {
+        font-size: 1.1em;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .closet-area, .donation-area, .ai-tips {
+        background: rgba(30, 30, 30, 0.95);
+        color: #f0f0f0;
+    }
+    
+    .closet-title {
+        color: #f0f0f0;
+    }
+    
+    .clothing-item {
+        background: rgba(50, 50, 50, 0.9);
+        color: #f0f0f0;
+    }
+    
+    .clothing-name {
+        color: #f0f0f0;
+    }
+    
+    .tip-item {
+        background: rgba(40, 40, 60, 0.8);
+        color: #f0f0f0;
+    }
+    
+    .fact-item {
+        background: rgba(60, 40, 40, 0.8);
+        color: #f0f0f0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+    }
+    
+    .header, .main-content, .ai-tips, .pollution-facts {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    
+    .clothing-item {
+        break-inside: avoid;
+    }
+    
+    .celebration, .info-card {
+        display: none !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .clothing-item {
+        border: 3px solid #000;
+    }
+    
+    .donation-box {
+        border: 3px solid #000;
+    }
+    
+    .info-card {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .clothing-item:hover {
+        transform: none;
+    }
+    
+    .donation-box.drag-over {
+        transform: none;
+    }
+}
+/* About Us Section */
+.about-us {
+  padding: 4rem 2rem;
+  background: #f0f8ff; /* Açık mavi ton */
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* Küçük ekranlarda alt alta gelsin */
+}
+
+.circular-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 5px solid #00796b; /* yeşil çerçeve */
+}
+
+.circular-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-text {
+  max-width: 600px;
+}
+
+.about-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #00796b;
+}
+
+.about-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Features Section */
+.features {
+  padding: 5rem 2rem;
+  background: #fff3e0; /* Hafif turuncu ton */
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #e65100;
+}
+
+.features p {
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  color: #555;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-item {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.feature-item img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.feature-item h3 {
+  color: #e65100;
+  font-size: 1.25rem;
+}
+/* Content Blocks */
+.content-block {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* Küçük ekranlarda alt alta gelsin */
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Block 1 Styling */
+.block-1 {
+  background: #e8f5e9; /* Açık yeşil ton */
+}
+
+/* Block 2 Styling */
+.block-2 {
+  background: #fff3e0; /* Açık turuncu ton */
+  flex-direction: row-reverse; /* Görsel ve metin yer değiştirir */
+}
+
+/* Image Container */
+.content-image {
+  flex: 1;
+  min-width: 300px;
+}
+
+.content-image img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+/* Text Container */
+.content-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.content-text h2 {
+  font-size: 2rem;
+  color: #00796b;
+  margin-bottom: 1rem;
+}
+
+.content-text p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-block {
+    flex-direction: column !important; /* Küçük ekranlarda alt alta */
+  }
+  .content-image, .content-text {
+    min-width: 100%;
+  }
+}
+/* Team Section */
+.team-section {
+  padding: 5rem 2rem;
+  background: #f3e5f5; /* Açık mor ton */
+  text-align: center;
+}
+
+.team-section h2 {
+  font-size: 2rem;
+  color: #6a1b9a; /* Mor ton */
+  margin-bottom: 0.5rem;
+}
+
+.team-section h3 {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 3rem;
+}
+
+/* Profile Grid */
+.profile-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.profile {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Tam daire */
+  overflow: hidden;
+  border: 4px solid #ce93d8; /* Mor çerçeve */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile {
+    width: 120px;
+    height: 120px;
+  }
+}
+/* Pricing / Info Cards Section */
+.pricing-section {
+  padding: 5rem 2rem;
+  background: #fff8e1; /* Açık sarı ton */
+  text-align: center;
+}
+
+.pricing-section h2 {
+  font-size: 2rem;
+  color: #fbc02d; /* Sarı alt ton */
+  margin-bottom: 0.5rem;
+}
+
+.pricing-section h3 {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 3rem;
+}
+
+/* Cards Container */
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap; /* Küçük ekranlarda alt alta gelsin */
+}
+
+/* Individual Cards */
+.info-card {
+  background: #ffeb3b; /* Canlı sarı */
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  flex: 1 1 250px; /* Responsive genişlik */
+  max-width: 300px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.info-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+}
+
+.info-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #f57f17; /* Daha koyu sarı */
+}
+
+.info-card ul {
+  list-style-type: disc;
+  padding-left: 1.2rem;
+  text-align: left;
+}
+
+.info-card li {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+/* FAQ Section */
+.faq-section {
+  padding: 5rem 2rem;
+  background: #e3f2fd; /* Açık mavi ton */
+  text-align: center;
+}
+
+.faq-section h2 {
+  font-size: 2rem;
+  color: #1565c0; /* Canlı mavi */
+  margin-bottom: 0.5rem;
+}
+
+.faq-section h3 {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 3rem;
+}
+
+/* FAQ Container */
+.faq-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Individual FAQ Item */
+.faq-item {
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-left: 5px solid #42a5f5; /* sol renkli çubuk */
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.faq-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.faq-item h3 {
+  font-size: 1.2rem;
+  color: #1565c0;
+  margin-bottom: 0.5rem;
+}
+
+.faq-item p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+}
+/* Contact Us Section */
+.contact-section {
+  padding: 5rem 2rem;
+  background: #e0f7fa; /* Açık mavi ton */
+}
+
+.contact-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.contact-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.contact-text h2 {
+  font-size: 2rem;
+  color: #00796b;
+  margin-bottom: 1rem;
+}
+
+.contact-text p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.contact-map {
+  flex: 1;
+  min-width: 300px;
+}
+
+.contact-map img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+  background: #263238; /* Koyu gri/mavi ton */
+  color: #fff;
+  padding: 3rem 2rem 1rem 2rem;
+  font-size: 0.95rem;
+}
+
+footer a {
+  color: #ffca28; /* Sarı linkler */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer a:hover {
+  color: #fff176;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-content ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.footer-content .social-links {
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid #455a64;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  text-align: center;
+  color: #b0bec5;
+}
