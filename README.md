@@ -1,2 +1,2 @@
 #Digital Wardrobe 
-file:///C:/Users/Berra/Downloads/intex.html
+a digital wardrobe where you can improve your fashion choices
